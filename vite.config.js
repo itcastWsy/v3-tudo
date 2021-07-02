@@ -1,4 +1,4 @@
 export default {
   // 配置选项
-  base:"./"
+  base:"https://itcastwsy.github.io/v3-tudo/dist/"
 }
