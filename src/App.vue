@@ -5,8 +5,9 @@
       <input
         autofocus
         type="text"
-        v-model="inp"
-        @keyup.enter="add"
+        :value="inpValue"
+        @input="setInput($event.target.value)"
+        @keyup.enter="onPushList"
         placeholder="请输入代办事项"
       >
     </div>
@@ -17,30 +18,60 @@
       >
         <div> <input
             type="checkbox"
-            v-model="item.checked"
+            :checked="item.checked"
+            @change="changeChecked(index)"
           >
-          <span :class="item.checked?'finished':''">{{item.value}}</span>
+          <span :class="item.checked&&'finished'">{{item.value}}</span>
         </div>
-
-        <button @click="onDelete(index)">X</button>
+        <button @click="clearOne(index)">X</button>
       </li>
     </ul>
     <section>
-
-      <div><b>{{lefts}}</b> 未完成</div>
+      <span> {{undoLength}} 未完成</span>
       <a
-        href="javascript:;"
-        @click="clearFinish"
-      >清理已经完成的 <b>{{finished}}</b> 项目 </a>
+        href="#"
+        @click="clearDoneList"
+      >清理 <b>{{doneLength}}</b> 已完成</a>
     </section>
   </div>
 </template>
 
 <script>
 import { reactive, ref, computed } from "vue";
+import useInput from "./composables/useInput";
+import useList from "./composables/useList";
+
 export default {
   name: "App",
   setup() {
+    let { inpValue, setInput } = useInput();
+    const {
+      list,
+      pushList,
+      changeChecked,
+      undoLength,
+      doneLength,
+      clearDoneList,
+      clearOne,
+    } = useList();
+
+    const onPushList = () => {
+      pushList(inpValue.value);
+      setInput("");
+    };
+    return {
+      inpValue,
+      setInput,
+      list,
+      changeChecked,
+      undoLength,
+      doneLength,
+      clearDoneList,
+      clearOne,
+      onPushList,
+    };
+  },
+  setup1() {
     const list = reactive([]);
     const inp = ref("");
     const add = () => {
