@@ -72,7 +72,7 @@ export default {
     };
   },
   setup1() {
-    const list = reactive([]);
+    const list = ref([]);
     const inp = ref("");
     const add = () => {
       list.unshift({ id: Date.now(), value: inp.value, checked: false });
@@ -80,9 +80,7 @@ export default {
       console.log(list);
     };
     const clearFinish = () => {
-      const newList = list.filter((v) => !v.checked);
-      list.length = 0;
-      list.push(...newList);
+      list.value = list.filter((v) => !v.checked);
     };
     const onDelete = (index) => {
       list.splice(index, 1);
