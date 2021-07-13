@@ -1,26 +1,24 @@
-import { reactive, computed } from "vue"
+import { ref, computed } from "vue"
 
 export default function useList() {
-  const list = reactive([]);
+  const list = ref([]);
   const pushList = (value) => {
-    if (!list.find(v => v.value === value)) {
-      list.push({ id: Date.now(), value, checked: false });
+    if (!list.value.find(v => v.value === value)) {
+      list.value.push({ id: Date.now(), value, checked: false });
     }
   }
   const changeChecked = (index) => {
-    list[index].checked = !list[index].checked;
+    list.value[index].checked = !list.value[index].checked;
   }
   const clearDoneList = () => {
-    let tmpList = list.filter(v => !v.checked);
-    list.length = 0;
-    list.push(...tmpList);
+    list.value = list.value.filter(v => !v.checked);
   }
   const clearOne = (index) => {
-    list.splice(index, 1);
+    list.value.splice(index, 1);
   }
 
-  const undoLength = computed(() => list.filter(v => !v.checked).length);
-  const doneLength = computed(() => list.filter(v => v.checked).length);
+  const undoLength = computed(() => list.value.filter(v => !v.checked).length);
+  const doneLength = computed(() => list.value.filter(v => v.checked).length);
   return { list, pushList, changeChecked, undoLength, doneLength, clearDoneList, clearOne }
 
 }

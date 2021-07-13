@@ -37,8 +37,10 @@
 </template>
 
 <script>
-import { reactive, ref, computed } from "vue";
+import { ref, computed } from "vue";
+// 输入框的hooks
 import useInput from "./composables/useInput";
+// 数组的hooks
 import useList from "./composables/useList";
 
 export default {
@@ -46,13 +48,13 @@ export default {
   setup() {
     let { inpValue, setInput } = useInput();
     const {
-      list,
-      pushList,
-      changeChecked,
-      undoLength,
-      doneLength,
-      clearDoneList,
-      clearOne,
+      list, // 页面显示的数组
+      pushList, //  添加到数组
+      changeChecked, // 切换选中
+      undoLength, // 未完成的数量
+      doneLength, // 已经完成的数量
+      clearDoneList, // 清除已经完成的元素
+      clearOne, // 移除一个元素
     } = useList();
 
     const onPushList = () => {
@@ -60,34 +62,16 @@ export default {
       setInput("");
     };
     return {
-      inpValue,
-      setInput,
-      list,
-      changeChecked,
-      undoLength,
-      doneLength,
-      clearDoneList,
-      clearOne,
-      onPushList,
+      inpValue, // 输入框的值
+      setInput, // 存储输入框的值
+      list, // 页面显示数据的数组
+      changeChecked, // 任务的切换选中
+      undoLength, // 未完成的任务的数量
+      doneLength, // 已完成的任务的数量
+      clearDoneList, // 清除完成的任务
+      clearOne, // 移除单个元素
+      onPushList, // 输入框的输入事件
     };
-  },
-  setup1() {
-    const list = ref([]);
-    const inp = ref("");
-    const add = () => {
-      list.unshift({ id: Date.now(), value: inp.value, checked: false });
-      inp.value = "";
-      console.log(list);
-    };
-    const clearFinish = () => {
-      list.value = list.filter((v) => !v.checked);
-    };
-    const onDelete = (index) => {
-      list.splice(index, 1);
-    };
-    const lefts = computed(() => list.filter((v) => !v.checked).length);
-    const finished = computed(() => list.filter((v) => v.checked).length);
-    return { list, inp, add, lefts, finished, clearFinish, onDelete };
   },
 };
 </script>
